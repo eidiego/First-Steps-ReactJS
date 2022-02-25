@@ -1,0 +1,51 @@
+    # Iniciando projeto em ReactJS #
+
+Descrição do passo a passo para configuração do ambiente de desenvolvimento React.
+
+    # Instalando bibliotecas React e React-dom e criando pastas iniciais #
+
+- Iniciar package.json utilizando o comando "yarn init -y" ou "npm init -y", isso vai criar o arquivo packet.json
+
+- Adicionar a bibliotecas do react com o comando "yarn add react" e "yarn add react-dom"
+
+- Criar pasta "src", onde ficará todo o código criado para aplicação.
+
+- Criar pasta public onde ficará nossos arquivos publicos como index.html, robots.txt, etc...
+
+    # Instalando e configurando Babel #
+
+- Primeiros comandos de instalação "yarn add @babel/core", "yarn add @babel/cli" e "yarn add @babel/preset-env", 
+todos utilizando "-D" ao final, para definir como parametros apenas para desenvolvimento.
+
+- Criar arquivo de configuração do Babel com o nome de "babel.config.js" e nele fazer as seguintes configurações:
+
+    module.exports = {
+        presets: [
+            '@babel/preset-env'
+        ]
+    }
+
+    # Utilizando o Babel para converter códigos #    
+
+- Uma das formas de utilizar a conversão do Babel, é utilizando o comando
+ "yarn babel 'PASTA DO ARQUIVO/NOME DO ARQUIVO A SER CONVERTIDO' --out-file dist/bundle.js"
+ a opção '--out-file' define o local e arquivo que será disponibilizado o código convertido pelo babel
+ por convenção usa-se a nomeclatura 'dist' para a pasta e 'bundle' para o arquivo.
+
+
+    #  Configurando o babel para trabalhar com códigos React #
+
+
+- Para que o Babel consiga compreender e converter o código React é preciso instalar a extensão 'preset-react'
+utlizando o comando 'yarn add @babel/preset-react -D'
+- Após a instalação do novo preset, é necessário inclui-lo no arquivo de configuração do Babel criado anteriormente(babel.config.js)
+- Agora o código do arquivo ficará assim:
+
+    module.exports = {
+    presets: [
+        '@babel/preset-env',
+        '@babel/preset-react',
+    ]
+}
+
+
