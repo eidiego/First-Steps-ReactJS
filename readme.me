@@ -44,8 +44,118 @@ utlizando o comando 'yarn add @babel/preset-react -D'
     module.exports = {
     presets: [
         '@babel/preset-env',
-        '@babel/preset-react',
+        [ '@babel/preset-react', {
+           runtime: 'automatic'
+       }],
     ]
 }
+ 
+
+    #  Instalando e configurando Webpack  # 
+
+-   Comandos para instalação do Webpack e extensões: yarn add webpack webpack-cli webpack-dev-server -D
+- Após concluir a instalação, chegou a hroa de configurar o Webpack, faça isso criando o arquivo 'webpack.config.js'
+e coloque o seguinte código:
 
 
+*// Esses comandos indicam o local e arquivo onde o Webpack vai interagir, a const utlizada juntamente com os códigos
+'path.resolve' servem para substituir o uso da / ou \ inserida diretamente no endereço, por conta de diferenças entre SO's
+utilizando o path.resolve em conjunto com o '__dirname', o caminho já é adicionado da forma correta independete do sistema utilizado //*  
+
+const path = require('path')
+
+module.exports = {
+    entry: path.resolve(__dirname, 'src', 'index.jsx'), // Nome do diretório e arquivo do código inicial
+    output: {}
+    path: path.resolve(__dirname, 'dist'), // Diretório do código transformado
+    filename: 'bundle.js', // arquivo do código transformado
+ },
+
+
+*// A porção do código abaixo, informa ao webpack quais os tipos de arquivo ele deve trabalhar. *//
+resolve : {
+     extensions: ['.js', '.jsx', '.css']
+ },
+    *// Código abaixo define regras de como o webpack vai interagir com cada  tipo de arquivo *//
+    module: {
+        rules: [
+            {
+              test: /\.jsx$/,
+              exclude: /node_modules/,
+              use: 'babel-loader' # Babel loader é basicamente a integração entre o babel e o webpack.
+              É necessário instalar essa dependencia com o comando 'yarn add babel-loader -D'
+            }
+        ] 
+    }
+};
+
+
+-Para não precisar apontar o caminho fixo da pasta e do arquivo bundle.js dentro do index.html, 
+o webpack usa uma ferramenta que pode ser instalada pelo comando 'yarn add html-webpack-plugin -D'
+
+-adicionar ao topo do arquivo:
+
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+plugins: [
+    new HtmlWebpackPlugin({
+        template:path.resolve(__dirname, 'public', 'index.html')
+    })
+    ],
+
+Para tirar a necessidade de utilizar o comando 'yarn webpack', todas as vezes que precisar atualizar o código com mudanças
+podemos usar a ferramenta do webpack que pode ser instalada pelo comando 'yarn webpack-dev-server -D', apartir do momento
+que você configura essa ferramenta, ela automaticamente roda o webpack para realizar a conversão do código.
+
+Código abaixo:
+
+ devServer: {
+        // contentBase: path.resolve(__dirname, 'public'),
+        // contentBase Webpack Version v4
+        static: {
+            directory: path.resolve(__dirname, 'public'),
+        }
+    },
+
+O comando que deve ser executado para que essa função funcione é 'yarn webpack serve'
+
+   # Ferramenta para ajudar a visualizar erros #
+
+   Adicionando a linha devtool: 'eval-source-map ' no arquivo webpack.config.js, você conseguirá analisar pelas 
+   ferramentas de desenvolvimento dos browsers, o erro de forma mais clara para debbugar.
+
+   # Configurando ambientes de produção e desenvolvimento no webpack #
+
+Deverá ser instalado a ferramenta com o seguinte comando 'yarn add cross-env -D'
+
+   No arquivo webpack realizar as seguintes alterações:
+
+Adicionar variavel isDevelopment
+
+   const isDevelopment = process.env.NODE_ENV !== 'production';
+
+Adicionar diferentes ambientes utilizando a variavel.
+
+module.exports = {
+        mode: isDevelopment ? 'development':'production',
+        devtool: isDevelopment ? 'eval-source-map':'source-map',
+
+
+Adicionar ao arquivo package.json a seguinte configuração:
+
+"scripts": {
+  "dev": "webpack serve",
+  "build": "cros-env NODE_ENV=production webpack"
+},
+
+
+# Configurando suporte para CSS #
+
+Instalar ferramentas pelo comando 'yarn add style-loader css-loader -D'
+
+Adicionar ao webpack a seguinte configuração
+        {
+            test: /\.css$/,
+            exclude: /node_modules/,
+            use: ['style-loader', 'css-loader'],
+            }
